@@ -1,0 +1,124 @@
+[gd_scene load_steps=9 format=3 uid="uid://bd6vsc068xyto"]
+
+[ext_resource type="FontFile" uid="uid://dibl1mucvyh8a" path="res://Assets/font/pixelated.ttf" id="1_ob87e"]
+[ext_resource type="Script" path="res://Scenes/UI/Dialogue/Dialogue.gd" id="1_okqab"]
+[ext_resource type="AudioStream" uid="uid://c33icjguuhjy2" path="res://Assets/sfx/click.wav" id="2_egbtn"]
+[ext_resource type="Texture2D" uid="uid://bb7aad4fl2kjs" path="res://Assets/2d/UI/Dialogue/Down-arrow.png" id="4_42u1s"]
+
+[sub_resource type="Theme" id="Theme_rxu4u"]
+default_font = ExtResource("1_ob87e")
+default_font_size = 37
+
+[sub_resource type="Animation" id="Animation_w7jy2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_1evnl"]
+resource_name = "continue_wave"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 6]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7ki7m"]
+_data = {
+"RESET": SubResource("Animation_w7jy2"),
+"continue_wave": SubResource("Animation_1evnl")
+}
+
+[node name="Dialogue" type="Control"]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 0.315
+offset_bottom = -0.12001
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_okqab")
+metadata/_edit_group_ = true
+
+[node name="background" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 7.0
+offset_right = 1145.0
+offset_bottom = 202.0
+color = Color(0, 0, 0, 1)
+metadata/_edit_lock_ = true
+
+[node name="body" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.017
+anchor_top = 0.031
+anchor_right = 0.017
+anchor_bottom = 0.031
+offset_left = 13.416
+offset_top = 41.912
+offset_right = 1114.42
+offset_bottom = 174.912
+theme = SubResource("Theme_rxu4u")
+bbcode_enabled = true
+text = "Dialogue Test
+[shake]This is awesome!!!![/shake]
+"
+scroll_active = false
+scroll_following = true
+metadata/_edit_lock_ = true
+
+[node name="name" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.017
+anchor_top = 0.031
+anchor_right = 0.017
+anchor_bottom = 0.031
+offset_left = -5.584
+offset_top = -3.088
+offset_right = 1108.42
+offset_bottom = 43.912
+theme = SubResource("Theme_rxu4u")
+bbcode_enabled = true
+text = "[color=#aaa]Name go here[/color]"
+metadata/_edit_lock_ = true
+
+[node name="click" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_egbtn")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[node name="continue-arrow" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1102, 170)
+scale = Vector2(3, 3)
+texture = ExtResource("4_42u1s")
+hframes = 7
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="continue-arrow"]
+libraries = {
+"": SubResource("AnimationLibrary_7ki7m")
+}
+autoplay = "continue_wave"
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
